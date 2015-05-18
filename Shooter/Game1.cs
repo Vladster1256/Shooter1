@@ -53,7 +53,10 @@ namespace Shooter
         Random random;
 
         Texture2D projectileTexture;
+        Texture2D homingProjectileTexture;
+
         List<Projectile> projectiles;
+        List<HomingProjectile> homingProjectiles;
 
         // The rate of fire of the player laser
         TimeSpan fireTime;
@@ -123,6 +126,8 @@ namespace Shooter
 
             projectiles = new List<Projectile>();
 
+            homingProjectiles = new List<HomingProjectile>();
+
             // Set the laser to fire every quarter second
             fireTime = TimeSpan.FromSeconds(.15f);
 
@@ -163,6 +168,7 @@ namespace Shooter
             enemyTexture = Content.Load<Texture2D>("mineAnimation");
 
             projectileTexture = Content.Load<Texture2D>("laser");
+            homingProjectileTexture = Content.Load<Texture2D>("homingBullet");
 
             explosionTexture = Content.Load<Texture2D>("explosion");
 
@@ -308,6 +314,19 @@ namespace Shooter
             }
         }
 
+        private void UpdateHomingProjectiles()
+        {
+            for(int i = homingProjectiles.Count - 1; i >= 0; i--)
+            {
+                homingProjectiles[i].Update();
+
+                
+
+            }
+
+
+        }
+
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -392,11 +411,27 @@ namespace Shooter
                 this.Exit();
             }
 
-            if (currentKeyboardState.IsKeyDown(Keys.Space) || currentGamePadState.Buttons.A == ButtonState.Pressed)
+            if (currentKeyboardState.IsKeyDown(Keys.Space) || currentGamePadState.Triggers.Right >= 0.8)
             {
-                UpdateProjectiles();
+                // Add the projectile, but add it to the front and center of the player
+
+                // Fire only every interval we set as the fireTime
+                if (gameTime.TotalGameTime - previousFireTime > fireTime)
+                {
+                    // Reset our current time
+                    previousFireTime = gameTime.TotalGameTime;
+
+                    AddProjectile(player.Position + new Vector2(player.Width / 2, 0));
+
+                    // Play the laser sound
+                    laserSound.Play();
+                }   
             }
 
+            if(currentKeyboardState.IsKeyDown(Keys.LeftShift) || currentGamePadState.Triggers.Left >= 0.8)
+            {
+
+            }
 
             if (currentKeyboardState.IsKeyDown(Keys.Right) ||
             currentGamePadState.DPad.Right == ButtonState.Pressed)
@@ -419,18 +454,7 @@ namespace Shooter
             player.Position.X = MathHelper.Clamp(player.Position.X, 0, GraphicsDevice.Viewport.Width - player.Width);
             player.Position.Y = MathHelper.Clamp(player.Position.Y, 0, GraphicsDevice.Viewport.Height - player.Height);
 
-            // Fire only every interval we set as the fireTime
-            if (gameTime.TotalGameTime - previousFireTime > fireTime)
-            {
-                // Reset our current time
-                previousFireTime = gameTime.TotalGameTime;
-
-                // Add the projectile, but add it to the front and center of the player
-                AddProjectile(player.Position + new Vector2(player.Width / 2, 0));
-
-                // Play the laser sound
-                laserSound.Play();
-            }
+           
 
             // reset score if player health goes to zero
             if (player.Health <= 0)
@@ -438,6 +462,7 @@ namespace Shooter
                 player.Health = 100;
                 score = 0;
             }
+            UpdateProjectiles();
 
         }
 
