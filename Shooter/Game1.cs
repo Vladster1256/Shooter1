@@ -314,19 +314,28 @@ namespace Shooter
             }
         }
 
-        private void UpdateHomingProjectiles()
+        private void AddHomingProjectile(Vector2 position)
+        {
+            HomingProjectile homingProjectile = new HomingProjectile();
+            homingProjectile.Initialize(GraphicsDevice.Viewport, homingProjectileTexture, position);
+            homingProjectiles.Add(homingProjectile);
+        }
+
+        private void UpdateHomingProjectiles(GameTime gameTime, Vector2 position)
         {
             for(int i = homingProjectiles.Count - 1; i >= 0; i--)
             {
-                homingProjectiles[i].Update();
-
-                
-
+                for (int b = enemies.Count - 1; b >= 0; b--)
+                {
+                    homingProjectiles[i].LerpTowardDesired(homingProjectiles[i].Position, position, 0.016f);
+                    homingProjectiles[i].Update(gameTime, position);
+                }
+                if (homingProjectiles[i].Active == false)
+                {
+                    homingProjectiles.RemoveAt(i);
+                }
             }
-
-
         }
-
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -370,7 +379,13 @@ namespace Shooter
             UpdateCollision();
 
             // Update the projectiles
-            
+            UpdateProjectiles();
+
+            for (int i = 0; i >= enemies.Count - 1; i--)
+            {
+                Vector2 temp = enemies[i].Position;
+                UpdateHomingProjectiles(gameTime,temp);
+            }
 
             // Update the explosions
             UpdateExplosions(gameTime);
@@ -430,7 +445,16 @@ namespace Shooter
 
             if(currentKeyboardState.IsKeyDown(Keys.LeftShift) || currentGamePadState.Triggers.Left >= 0.8)
             {
+                if (gameTime.TotalGameTime - previousFireTime > fireTime)
+                {
+                    // Reset our current time
+                    previousFireTime = gameTime.TotalGameTime;
 
+                    AddHomingProjectile(player.Position + new Vector2(player.Width / 2, 0));
+
+                    // Play the laser sound
+                    laserSound.Play();
+                } 
             }
 
             if (currentKeyboardState.IsKeyDown(Keys.Right) ||
@@ -528,6 +552,30 @@ namespace Shooter
                     }
                 }
             }
+
+            for (int i = 0; i < homingProjectiles.Count; i++)
+            {
+                for (int j = 0; j < enemies.Count; j++)
+                {
+                    // Create the rectangles we need to determine if we collided with each other
+                    rectangle1 = new Rectangle((int)homingProjectiles[i].Position.X -
+                    homingProjectiles[i].Width / 2, (int)homingProjectiles[i].Position.Y -
+                    homingProjectiles[i].Height / 2, homingProjectiles[i].Width, homingProjectiles[i].Height);
+
+                    rectangle2 = new Rectangle((int)enemies[j].Position.X - enemies[j].Width / 2,
+                    (int)enemies[j].Position.Y - enemies[j].Height / 2,
+                    enemies[j].Width, enemies[j].Height);
+
+                    // Determine if the two objects collided with each other
+                    if (rectangle1.Intersects(rectangle2))
+                    {
+                        enemies[j].Health -= homingProjectiles[i].Damage;
+                        homingProjectiles[i].Active = false;
+                    }
+                }
+            }
+
+
         }
 
 
@@ -561,6 +609,11 @@ namespace Shooter
             for (int i = 0; i < projectiles.Count; i++)
             {
                 projectiles[i].Draw(spriteBatch);
+            }
+
+            for (int i = 0; i < homingProjectiles.Count; i++)
+            {
+                homingProjectiles[i].Draw(spriteBatch);
             }
 
             // Draw the explosions

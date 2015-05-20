@@ -21,3 +21,5 @@ Content\Sound\soi.xnb
 Content\Sound\sandstorm.xnb
 Content\Sound\sandstorm.wma
 Content\illuminati.xnb
+Content\homingBullet.xnb
+Content\roflSprite.xnb

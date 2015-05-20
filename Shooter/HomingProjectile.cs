@@ -12,7 +12,8 @@ namespace Shooter
         // Image representing the Projectile
         public Texture2D Texture;
 
-        public Player player;
+        Vector2 current = Vector2.Zero;
+        Vector2 desired = new Vector2(10, 0);
 
         // Position of the Projectile relative to the upper left side of the screen
         public Vector2 Position;
@@ -50,27 +51,28 @@ namespace Shooter
 
             Active = true;
 
-            Damage = 2;
+            Damage = 1;
 
-            projectileMoveSpeed = 20f;
+            projectileMoveSpeed = 10f;
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, Vector2 position)
         {
             // Projectiles always move to the right
             Position.X += projectileMoveSpeed;
 
-            //Find the delta time
-                float delta = (float)gameTime.ElapsedGameTime.TotalSeconds * 60;
-                //Find the direction
-                Vector2 direction = player.Position - this.Position;
-                direction.Normalize();
-                //Move towards it
-                Position += direction * delta;
+            LerpTowardDesired(Position, position, 0.016f);
+        }
 
-            // Deactivate the bullet if it goes out of screen
-            if (Position.X + Texture.Width / 2 > viewport.Width)
-                Active = false;
+        // For this example we will lerp 75% of the way from 'current' to 'desired' per second
+        public Vector2 LerpTowardDesired(Vector2 current, Vector2 desired, float timeDelta)
+        {
+            float lerpPercentage = timeDelta * 0.75f;
+            Vector2 newPos = Vector2.Zero;
+            newPos.X = MathHelper.Lerp(current.X, desired.X, lerpPercentage);
+            newPos.Y = MathHelper.Lerp(current.Y, desired.Y, lerpPercentage);
+
+            return newPos;
         }
 
         public void Draw(SpriteBatch spriteBatch)

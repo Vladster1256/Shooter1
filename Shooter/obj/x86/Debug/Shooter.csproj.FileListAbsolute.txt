@@ -27,3 +27,5 @@ C:\Users\vgar7399\Documents\Visual Studio 2010\Projects\Shooter\Shooter\bin\x86\
 C:\Users\vgar7399\Documents\Visual Studio 2010\Projects\Shooter\Shooter\bin\x86\Debug\Content\Sound\sandstorm.wma
 C:\Users\vgar7399\Documents\Visual Studio 2010\Projects\Shooter\Shooter\bin\x86\Debug\Content\illuminati.xnb
 C:\Users\vgar7399\Documents\Visual Studio 2010\Projects\Shooter\Shooter\obj\x86\Debug\Shooter.csprojResolveAssemblyReference.cache
+C:\Users\vgar7399\Documents\Visual Studio 2010\Projects\Shooter\Shooter\bin\x86\Debug\Content\homingBullet.xnb
+C:\Users\vgar7399\Documents\Visual Studio 2010\Projects\Shooter\Shooter\bin\x86\Debug\Content\roflSprite.xnb

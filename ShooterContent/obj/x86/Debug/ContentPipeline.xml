@@ -184,6 +184,24 @@
       <Output>C:\Users\vgar7399\Documents\Visual Studio 2010\Projects\Shooter\Shooter\bin\x86\Debug\Content\illuminati.xnb</Output>
       <Time>2015-05-14T13:35:55.9269369-06:00</Time>
     </Item>
+    <Item>
+      <Source>homingBullet.png</Source>
+      <Name>homingBullet</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\vgar7399\Documents\Visual Studio 2010\Projects\Shooter\Shooter\bin\x86\Debug\Content\homingBullet.xnb</Output>
+      <Time>2015-05-18T12:03:55.8257676-06:00</Time>
+    </Item>
+    <Item>
+      <Source>roflSprite.png</Source>
+      <Name>roflSprite</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\vgar7399\Documents\Visual Studio 2010\Projects\Shooter\Shooter\bin\x86\Debug\Content\roflSprite.xnb</Output>
+      <Time>2015-05-14T12:39:27.115152-06:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>
