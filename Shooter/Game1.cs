@@ -381,12 +381,12 @@ namespace Shooter
             // Update the projectiles
             UpdateProjectiles();
 
-            for (int i = 0; i >= enemies.Count - 1; i--)
+            for (int i = 0; i < enemies.Count - 1; i++)
             {
                 Vector2 temp = enemies[i].Position;
                 UpdateHomingProjectiles(gameTime,temp);
             }
-
+            0
             // Update the explosions
             UpdateExplosions(gameTime);
 
