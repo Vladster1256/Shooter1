@@ -151,8 +151,8 @@ namespace Shooter
 
             // Load the player resources
             Animation playerAnimation = new Animation();
-            Texture2D playerTexture = Content.Load<Texture2D>("roflcopter");
-            playerAnimation.Initialize(playerTexture, Vector2.Zero, 218, 110, 2, 30, Color.White, 1f, true);
+            Texture2D playerTexture = Content.Load<Texture2D>("roflSprite");
+            playerAnimation.Initialize(playerTexture, Vector2.Zero, 115 , 69, 2, 30, Color.White, 1f, true);
 
 
             Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y
@@ -327,6 +327,7 @@ namespace Shooter
             {
                 for (int b = enemies.Count - 1; b >= 0; b--)
                 {
+                    
                     homingProjectiles[i].LerpTowardDesired(homingProjectiles[i].Position, position, 0.016f);
                     homingProjectiles[i].Update(gameTime, position);
                 }
@@ -335,6 +336,22 @@ namespace Shooter
                     homingProjectiles.RemoveAt(i);
                 }
             }
+        }
+
+        private float calculateDistance(Vector2 target1, Vector2 target2)
+        {
+            float temp = new float();
+            temp = float.MaxValue;
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                if (enemies[i].Position.X < temp)
+                {
+
+                }
+
+            }
+
+            temp =target2 - target;
         }
 
         /// <summary>
@@ -386,7 +403,7 @@ namespace Shooter
                 Vector2 temp = enemies[i].Position;
                 UpdateHomingProjectiles(gameTime,temp);
             }
-            0
+            
             // Update the explosions
             UpdateExplosions(gameTime);
 

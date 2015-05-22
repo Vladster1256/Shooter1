@@ -61,13 +61,13 @@ namespace Shooter
             // Projectiles always move to the right
             Position.X += projectileMoveSpeed;
 
-            LerpTowardDesired(Position, position, 0.016f);
+            //LerpTowardDesired(Position, position, 0.016f);
         }
 
         // For this example we will lerp 75% of the way from 'current' to 'desired' per second
         public Vector2 LerpTowardDesired(Vector2 current, Vector2 desired, float timeDelta)
         {
-            float lerpPercentage = timeDelta * 0.75f;
+            float lerpPercentage = timeDelta * 1f;
             Vector2 newPos = Vector2.Zero;
             newPos.X = MathHelper.Lerp(current.X, desired.X, lerpPercentage);
             newPos.Y = MathHelper.Lerp(current.Y, desired.Y, lerpPercentage);
