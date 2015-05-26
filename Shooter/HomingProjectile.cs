@@ -51,20 +51,20 @@ namespace Shooter
 
             Active = true;
 
-            Damage = 1;
+            Damage = 2;
 
             projectileMoveSpeed = 10f;
         }
 
-        public void Update(GameTime gameTime, Vector2 position)
+        public void Update(GameTime gameTime)
         {
             // Projectiles always move to the right
-            Position.X += projectileMoveSpeed;
+             Position.X += projectileMoveSpeed;
 
-            //LerpTowardDesired(Position, position, 0.016f);
+            
         }
 
-        // For this example we will lerp 75% of the way from 'current' to 'desired' per second
+        
         public Vector2 LerpTowardDesired(Vector2 current, Vector2 desired, float timeDelta)
         {
             float lerpPercentage = timeDelta * 1f;

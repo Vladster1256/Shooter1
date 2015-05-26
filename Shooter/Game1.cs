@@ -60,6 +60,7 @@ namespace Shooter
 
         // The rate of fire of the player laser
         TimeSpan fireTime;
+        TimeSpan homingFireTime;
         TimeSpan previousFireTime;
 
         // Explosion graphics list
@@ -119,7 +120,7 @@ namespace Shooter
             previousSpawnTime = TimeSpan.Zero;
 
             // Used to determine how fast enemy respawns
-            enemySpawnTime = TimeSpan.FromSeconds(1.0f); 
+            enemySpawnTime = TimeSpan.FromSeconds(0.5f); 
 
             // Initialize our random number generator
             random = new Random();
@@ -130,6 +131,7 @@ namespace Shooter
 
             // Set the laser to fire every quarter second
             fireTime = TimeSpan.FromSeconds(.15f);
+            homingFireTime = TimeSpan.FromSeconds(.04f);
 
             // Initialize the explosion list
             explosions = new List<Animation>();
@@ -226,23 +228,26 @@ namespace Shooter
 
         private void AddEnemy()
         {
-            // Create the animation object
-            Animation enemyAnimation = new Animation();
+            for (int i = 0; i < 2; i++)
+            {
+                // Create the animation object
+                Animation enemyAnimation = new Animation();
 
-            // Initialize the animation with the correct animation information
-            enemyAnimation.Initialize(enemyTexture, Vector2.Zero, 47, 61, 8, 30, Color.White, 1f, true);
+                // Initialize the animation with the correct animation information
+                enemyAnimation.Initialize(enemyTexture, Vector2.Zero, 47, 61, 8, 30, Color.White, 1f, true);
 
-            // Randomly generate the position of the enemy
-            Vector2 position = new Vector2(GraphicsDevice.Viewport.Width + enemyTexture.Width / 2, random.Next(100, GraphicsDevice.Viewport.Height - 100));
+                // Randomly generate the position of the enemy
+                Vector2 position = new Vector2(GraphicsDevice.Viewport.Width + enemyTexture.Width / 2, random.Next(100, GraphicsDevice.Viewport.Height - 100));
 
-            // Create an enemy
-            Enemy enemy = new Enemy();
+                // Create an enemy
+                Enemy enemy = new Enemy();
 
-            // Initialize the enemy
-            enemy.Initialize(enemyAnimation, position);
+                // Initialize the enemy
+                enemy.Initialize(enemyAnimation, position);
 
-            // Add the enemy to the active enemies list
-            enemies.Add(enemy);
+                // Add the enemy to the active enemies list
+                enemies.Add(enemy);
+            }
         }
 
         private void UpdateEnemies(GameTime gameTime)
@@ -254,6 +259,7 @@ namespace Shooter
 
                 // Add an Enemy
                 AddEnemy();
+               
             }
 
             // Update the Enemies
@@ -321,16 +327,16 @@ namespace Shooter
             homingProjectiles.Add(homingProjectile);
         }
 
-        private void UpdateHomingProjectiles(GameTime gameTime, Vector2 position)
+        private void UpdateHomingProjectiles(GameTime gameTime)
         {
             for(int i = homingProjectiles.Count - 1; i >= 0; i--)
             {
-                for (int b = enemies.Count - 1; b >= 0; b--)
-                {
-                    
-                    homingProjectiles[i].LerpTowardDesired(homingProjectiles[i].Position, position, 0.016f);
-                    homingProjectiles[i].Update(gameTime, position);
-                }
+                int p = calulateShortestDistance(homingProjectiles[i].Position);
+
+                homingProjectiles[i].Position=homingProjectiles[i].LerpTowardDesired(homingProjectiles[i].Position, enemies[p].Position, 0.05f);
+                homingProjectiles[i].Position.X = homingProjectiles[i].Position.X -12;
+                homingProjectiles[i].Update(gameTime);
+
                 if (homingProjectiles[i].Active == false)
                 {
                     homingProjectiles.RemoveAt(i);
@@ -413,7 +419,7 @@ namespace Shooter
             for (int i = 0; i < enemies.Count - 1; i++)
             {
                 Vector2 temp = enemies[i].Position;
-                UpdateHomingProjectiles(gameTime,temp);
+                UpdateHomingProjectiles(gameTime);
             }
             
             // Update the explosions
@@ -474,7 +480,7 @@ namespace Shooter
 
             if(currentKeyboardState.IsKeyDown(Keys.LeftShift) || currentGamePadState.Triggers.Left >= 0.8)
             {
-                if (gameTime.TotalGameTime - previousFireTime > fireTime)
+                if (gameTime.TotalGameTime - previousFireTime > homingFireTime)
                 {
                     // Reset our current time
                     previousFireTime = gameTime.TotalGameTime;

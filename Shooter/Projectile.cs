@@ -48,7 +48,7 @@ namespace Shooter
 
             Active = true;
 
-            Damage = 2;
+            Damage = 10;
 
             projectileMoveSpeed = 20f;
         }
