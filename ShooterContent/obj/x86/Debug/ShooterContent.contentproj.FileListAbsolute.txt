@@ -1,1 +1,2 @@
 C:\Users\vgar7399\Documents\Visual Studio 2010\Projects\Shooter\ShooterContent\obj\x86\Debug\ShooterContent.contentprojResolveAssemblyReference.cache
+C:\Users\vcmar_000\Documents\GitHub\Shooter1\ShooterContent\obj\x86\Debug\ShooterContent.contentprojResolveAssemblyReference.cache

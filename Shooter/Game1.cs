@@ -340,19 +340,31 @@ namespace Shooter
 
         private float calculateDistance(Vector2 target1, Vector2 target2)
         {
-            float temp = new float();
-            temp = float.MaxValue;
+            float target1x = target1.X;
+            float target1y = target1.Y;
+            float target2x = target2.X;
+            float target2y = target2.Y;
+
+            return (float)Math.Sqrt(Math.Pow(target2x-target1x,2)+(Math.Pow(target2y-target1y,2))); 
+        }
+
+        private int calulateShortestDistance( Vector2 bullet)
+        {
+            int position = 0;
+            float temp = float.MaxValue;
+
             for (int i = 0; i < enemies.Count; i++)
             {
-                if (enemies[i].Position.X < temp)
+                if(calculateDistance(enemies[i].Position, bullet) < temp)
                 {
-
+                   temp = calculateDistance(enemies[i].Position, bullet);
+                   position = i;
                 }
-
             }
-
-            temp =target2 - target;
+            return position;
         }
+
+
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
