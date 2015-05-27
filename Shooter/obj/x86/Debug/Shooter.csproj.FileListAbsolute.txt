@@ -60,3 +60,4 @@ C:\Users\vcmar_000\Documents\GitHub\Shooter1\Shooter\bin\x86\Debug\Content\Sound
 C:\Users\vcmar_000\Documents\GitHub\Shooter1\Shooter\bin\x86\Debug\Shooter.exe
 C:\Users\vcmar_000\Documents\GitHub\Shooter1\Shooter\bin\x86\Debug\Shooter.pdb
 C:\Users\vcmar_000\Documents\GitHub\Shooter1\Shooter\obj\x86\Debug\Shooter.pdb
+C:\Users\vgar7399\Documents\Visual Studio 2010\Projects\Shooter\Shooter\bin\x86\Debug\Content\trishot.xnb

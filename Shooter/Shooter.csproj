@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation.cs" />
+    <Compile Include="Trishot.cs" />
     <Compile Include="HomingProjectile.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="ParallaxingBackground.cs" />

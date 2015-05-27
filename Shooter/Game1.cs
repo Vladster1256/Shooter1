@@ -54,9 +54,11 @@ namespace Shooter
 
         Texture2D projectileTexture;
         Texture2D homingProjectileTexture;
+        Texture2D trishotTexture;
 
         List<Projectile> projectiles;
         List<HomingProjectile> homingProjectiles;
+        List<Trishot> Trishots;
 
         // The rate of fire of the player laser
         TimeSpan fireTime;
@@ -126,7 +128,7 @@ namespace Shooter
             random = new Random();
 
             projectiles = new List<Projectile>();
-
+            Trishots = new List<Trishot>();
             homingProjectiles = new List<HomingProjectile>();
 
             // Set the laser to fire every quarter second
@@ -171,6 +173,7 @@ namespace Shooter
 
             projectileTexture = Content.Load<Texture2D>("laser");
             homingProjectileTexture = Content.Load<Texture2D>("homingBullet");
+            trishotTexture = Content.Load<Texture2D>("trishot");
 
             explosionTexture = Content.Load<Texture2D>("explosion");
 
@@ -344,6 +347,26 @@ namespace Shooter
             }
         }
 
+        private void AddTrishot(Vector2 position, Boolean istop, Boolean ismid, Boolean isbot)
+        {
+            Trishot projectile = new Trishot(istop, ismid, isbot);
+            projectile.Initialize(GraphicsDevice.Viewport, projectileTexture, position);
+            Trishots.Add(projectile);
+        }
+
+        private void UpdateTrishots()
+        {
+            for (int i = Trishots.Count - 1; i >= 0; i--)
+            {
+                Trishots[i].Update();
+
+                if (Trishots[i].Active == false)
+                {
+                    Trishots.RemoveAt(i);
+                }
+            }
+        }
+
         private float calculateDistance(Vector2 target1, Vector2 target2)
         {
             float target1x = target1.X;
@@ -410,17 +433,21 @@ namespace Shooter
             // Update the enemies
             UpdateEnemies(gameTime);
 
-            // Update the collision
-            UpdateCollision();
+           
 
             // Update the projectiles
             UpdateProjectiles();
+
+            UpdateTrishots();
 
             for (int i = 0; i < enemies.Count - 1; i++)
             {
                 Vector2 temp = enemies[i].Position;
                 UpdateHomingProjectiles(gameTime);
             }
+
+            // Update the collision
+            UpdateCollision();
             
             // Update the explosions
             UpdateExplosions(gameTime);
@@ -506,6 +533,20 @@ namespace Shooter
             currentGamePadState.DPad.Down == ButtonState.Pressed)
             {
                 player.Position.Y += playerMoveSpeed;
+            }
+
+            if (currentKeyboardState.IsKeyDown(Keys.LeftControl) || currentGamePadState.Buttons.RightShoulder == ButtonState.Pressed)
+            {
+                if (gameTime.TotalGameTime - previousFireTime > fireTime)
+                {
+                    previousFireTime = gameTime.TotalGameTime;
+
+                    AddTrishot(player.Position + new Vector2(player.Width / 2, 0),true, false, false);
+                    AddTrishot(player.Position + new Vector2(player.Width / 2, 0), false, true, false);
+                    AddTrishot(player.Position + new Vector2(player.Width / 2, 0), false, false, true);
+
+                    laserSound.Play();
+                }
             }
 
 
@@ -610,6 +651,29 @@ namespace Shooter
                 }
             }
 
+            for (int i = 0; i < Trishots.Count; i++)
+            {
+                for (int j = 0; j < enemies.Count; j++)
+                {
+                    // Create the rectangles we need to determine if we collided with each other
+                    rectangle1 = new Rectangle((int)Trishots[i].Position.X -
+                    Trishots[i].Width / 2, (int)Trishots[i].Position.Y -
+                    Trishots[i].Height / 2, Trishots[i].Width, Trishots[i].Height);
+
+                    rectangle2 = new Rectangle((int)enemies[j].Position.X - enemies[j].Width / 2,
+                    (int)enemies[j].Position.Y - enemies[j].Height / 2,
+                    enemies[j].Width, enemies[j].Height);
+
+                    // Determine if the two objects collided with each other
+                    if (rectangle1.Intersects(rectangle2))
+                    {
+                        enemies[j].Health -= Trishots[i].Damage;
+                        Trishots[i].Active = false;
+                    }
+                }
+            }
+
+
 
         }
 
@@ -649,6 +713,11 @@ namespace Shooter
             for (int i = 0; i < homingProjectiles.Count; i++)
             {
                 homingProjectiles[i].Draw(spriteBatch);
+            }
+
+            for (int i = 0; i < Trishots.Count; i++)
+            {
+                Trishots[i].Draw(spriteBatch);
             }
 
             // Draw the explosions
